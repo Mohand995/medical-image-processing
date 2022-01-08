@@ -1,0 +1,60 @@
+clear
+clc
+I1=imread('anfield.png');
+I2=imread('honda.jpg') ;
+imtool(I1)
+%%%%%%%%%%%%Adding two images%%%%%%%%%%%%%%%
+g=size(I1) ;
+x=imresize(I2,[1554,1200]) ;
+out=I1+x ;
+%%imtool(out) ;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%Histogram Equalization%%%%%%%%%%%
+grey1=rgb2gray(I1) ; 
+grey2=rgb2gray(out) ;
+%figure ;
+%%imhist(grey1); %% before histogram equalization 
+q=histeq(grey1) ;
+%figure ;
+%%imhist(q); %% after histogram equalization 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+kernel = -1 * ones(3);
+kernel(2,2) = 8;  % Now kernel = [-1,-1,-1; -1,8,-1; -1,-1,-1]
+output = conv2(double(inputImage), kernel, 'same');
+
+%%%%%%%%%IMADJUST%%%%%%%%%%%
+min1=min(min(min(I1))) ;
+max1=max(max(max(I1))) ; 
+M1=double(min1) ;
+M2=double(max1)/255 ; 
+f=imadjust(I1,[M1,M2],[0,1]) ;
+%figure ;
+%%imshow(f);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%FROM GRAY TO RGB%%%%%%%%%%
+   R=rgb2gray(I1); % It is gray now
+   %figure ;
+   gbImage = ind2rgb(R, jet(200));
+   %%imshow(gbImage) ;
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   
+   %%%%%weighted mean filter%%%%%%%%%%%%%%
+   filter=(1/16)*[1 2 1 ; 2 4 2; 1 2 1] ;
+   qq=imfilter(I1,filter,'replicate') ;
+  %% imshow(qq);
+   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   
+  %%%%%%create filter on your own(gaussian)%%%%%%%%%%%%%%%%%
+  %g=fspecial('gaussian',15,9) ;%% size+sigma
+  %ww=imfilter(I1,g);
+  %%1imshow(qq);
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  %%%%%%%%%%%median filter%%%%%%%%%%%%%
+  %filter2=medfilt2(I1,10) ;
+ %% imshow(filter2) ;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+aa=fspecial('unsharp',0.2) ;
+imfilter(I1,aa);
